@@ -32,17 +32,8 @@
     NSString* urlString = [command argumentAtIndex:0];
     NSURL* url = [NSURL URLWithString:urlString];
 
-    self.command = command;
-
-	// Arguments arenot used at the moment.
-    // NSArray* arguments = command.arguments;
-
-    [self.commandDelegate runInBackground:^{
-
-        [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVPluginHandleOpenURLNotification object:url]];
-        [[UIApplication sharedApplication] openURL:url];
-
-    }];
+    [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVPluginHandleOpenURLNotification object:url]];
+    [[UIApplication sharedApplication] openURL:url];
 }
 
 - (void)success
