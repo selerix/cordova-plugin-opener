@@ -16,7 +16,7 @@
     <!-- ios -->
     <platform name="ios">
         <js-module src="www/Opener.js" name="Opener">
-            <clobbers target="opener" /><!-- will be available under window.opener -->
+            <clobbers target="Opener" /><!-- will be available under window.Opener -->
         </js-module>
 
         <config-file target="config.xml" parent="/*">

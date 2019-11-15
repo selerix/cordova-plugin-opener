@@ -29,8 +29,9 @@
 {
 	NSLog(@"Cordova iOS Opener.open() called.");
 
-    NSString* url = [command argumentAtIndex:0];
-    
+    NSString* urlString = [command argumentAtIndex:0];
+    NSURL* url = [NSURL URLWithString:urlString];
+
     self.command = command;
 
 	// Arguments arenot used at the moment.
