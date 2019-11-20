@@ -12,7 +12,23 @@
       &lt;p&gt;This is a plugin for Cordova 6.1.1+ supporting iOS(>=6.0). It allows to open links in default app.&lt;/p&gt;
     </description>
 
-    
+    <!-- android -->
+    <platform name="android">
+
+        <js-module src="www/Opener.js" name="Opener">
+            <clobbers target="opener" /><!-- will be available under window.Opener -->
+        </js-module>
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="Opener" >
+                <param name="android-package" value="com.selerix.cordova.plugin.opener.Opener"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/Opener.java" target-dir="src/com/selerix/cordova/plugin/opener" />
+
+    </platform>
+
     <!-- ios -->
     <platform name="ios">
         <js-module src="www/Opener.js" name="Opener">
@@ -28,4 +44,6 @@
         <header-file src="src/ios/Opener.h" />
         <source-file src="src/ios/Opener.m" />
     </platform>
+
+    
 </plugin>

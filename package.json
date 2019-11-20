@@ -13,19 +13,19 @@
   "cordova": {
     "id": "com.selerix.cordova.plugin.opener",
     "platforms": [
-      "ios"
+      "ios",
+      "android"
     ]
   },
   "keywords": [
     "ecosystem:cordova",
-    "cordova-ios"
+    "cordova-ios",
+    "cordova-android"
   ],
-  "engines": [
-    {
+  "engines": {
       "name": "cordova",
-      "version": ">=3.0.0"
-    }
-  ],
+      "version": ">=6.1.1"
+  },
   "author": "Selerix Systems Inc.",
   "license": "MIT",
   "scripts": {
