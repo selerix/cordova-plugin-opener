@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    id="com.selerix.cordova.plugin.opener"
+    id="cordova-plugin-opener"
     version="1.0.0">
 
     <name>Opener</name>
@@ -16,16 +16,16 @@
     <platform name="android">
 
         <js-module src="www/Opener.js" name="Opener">
-            <clobbers target="opener" /><!-- will be available under window.Opener -->
+            <clobbers target="Opener" /><!-- will be available under window.Opener -->
         </js-module>
 
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="Opener" >
-                <param name="android-package" value="com.selerix.cordova.plugin.opener.Opener"/>
+                <param name="android-package" value="com.selerix.cordova.plugin.Opener"/>
             </feature>
         </config-file>
 
-        <source-file src="src/android/Opener.java" target-dir="src/com/selerix/cordova/plugin/opener" />
+        <source-file src="src/android/Opener.java" target-dir="src/com/selerix/cordova/plugin" />
 
     </platform>
 

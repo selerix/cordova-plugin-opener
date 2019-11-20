@@ -18,17 +18,26 @@
  SOFTWARE.
 */
 
-package com.selerix.cordova.plugin.opener;
+package com.selerix.cordova.plugin;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
+import org.apache.cordova.LOG;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import sun.rmi.runtime.Log;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.provider.Browser;
+import android.os.Parcelable;
+import android.net.Uri;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @TargetApi(19)
 public class Opener extends CordovaPlugin {
@@ -42,10 +51,10 @@ public class Opener extends CordovaPlugin {
             throws JSONException {
         if (action.equals("open")) {
 
-            this.callbackContext = callbackContext;
+            //this.callbackContext = callbackContext;
             final String url = args.getString(0);
 
-            Log.v(LOG_TAG, MESSAGE_TASK);
+            LOG.d(LOG_TAG, MESSAGE_TASK);
             this.cordova.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -76,9 +85,42 @@ public class Opener extends CordovaPlugin {
             } else {
                 intent.setData(uri);
             }
-            intent.putExtra(Browser.EXTRA_APPLICATION_ID, cordova.getActivity().getPackageName());
-            // Preventing from opening in the current app
-            this.openExternalExcludeCurrentApp(intent);
+            String currentPackage = cordova.getActivity().getPackageName();
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, currentPackage);
+
+            // Preventing from opening in the current app            
+            boolean hasCurrentPackage = false;
+
+            PackageManager pm = cordova.getActivity().getPackageManager();
+            List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
+            ArrayList<Intent> targetIntents = new ArrayList<Intent>();
+
+            for (ResolveInfo ri : activities) {
+                if (!currentPackage.equals(ri.activityInfo.packageName)) {
+                    Intent targetIntent = (Intent)intent.clone();
+                    targetIntent.setPackage(ri.activityInfo.packageName);
+                    targetIntents.add(targetIntent);
+                }
+                else {
+                    hasCurrentPackage = true;
+                }
+            }
+
+            // If the current app package isn't a target for this URL, then use
+            // the normal launch behavior
+            if (hasCurrentPackage == false || targetIntents.size() == 0) {
+                this.cordova.getActivity().startActivity(intent);
+            }
+            // If there's only one possible intent, launch it directly
+            else if (targetIntents.size() == 1) {
+                this.cordova.getActivity().startActivity(targetIntents.get(0));
+            }
+            // Otherwise, show a custom chooser without the current app listed
+            else if (targetIntents.size() > 0) {
+                Intent chooser = Intent.createChooser(targetIntents.remove(targetIntents.size()-1), null);
+                chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetIntents.toArray(new Parcelable[] {}));
+                this.cordova.getActivity().startActivity(chooser);
+            }
             return "";
             // not catching FileUriExposedException explicitly because buildtools<24 doesn't
             // know about it
