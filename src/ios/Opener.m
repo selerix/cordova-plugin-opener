@@ -31,15 +31,10 @@
 
     NSString* urlString = [command argumentAtIndex:0];
 
-    NSString* encodedUrlString = (NSString*)CFURLCreateStringByAddingPercentEscapes(
-                            NULL,
-                            (CFStringRef)urlString,
-                            NULL,
-                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                            kCFStringEncodingUTF8 );
+    NSString* encodedUrlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
     NSLog(@"Cordova iOS navigating to: %@", encodedUrlString);
-    
+
     NSURL* url = [NSURL URLWithString:encodedUrlString];
 
     [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVPluginHandleOpenURLNotification object:url]];
