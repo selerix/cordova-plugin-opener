@@ -30,7 +30,17 @@
 	NSLog(@"Cordova iOS Opener.open() called.");
 
     NSString* urlString = [command argumentAtIndex:0];
-    NSURL* url = [NSURL URLWithString:urlString];
+
+    NSString* encodedUrlString = (NSString*)CFURLCreateStringByAddingPercentEscapes(
+                            NULL,
+                            (CFStringRef)urlString,
+                            NULL,
+                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                            kCFStringEncodingUTF8 );
+
+    NSLog(@"Cordova iOS navigating to: %@", encodedUrlString);
+    
+    NSURL* url = [NSURL URLWithString:encodedUrlString];
 
     [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVPluginHandleOpenURLNotification object:url]];
     [[UIApplication sharedApplication] openURL:url];
