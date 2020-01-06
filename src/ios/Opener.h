@@ -1,5 +1,5 @@
 /*
- Copyright 2014 Modern Alchemists OG
+ Copyright (c) 2019 Selerix Systems
 
  Licensed under MIT.
 
